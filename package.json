@@ -10,9 +10,8 @@
   },
   "exports": {
     ".": {
-      "import": "./src/index.js",
-      "require": "./dist/index.cjs",
-      "types": "./src/index.d.ts"
+      "types": "./src/index.d.ts",
+      "import": "./src/index.js"
     }
   },
   "scripts": {
