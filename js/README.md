@@ -72,7 +72,48 @@ subconverter -u ./subscription.txt -t mixed
                       Supported: clash, clashr, surge, quanx, v2ray,
                                  ss, ssr, trojan, mixed, singbox
 -o, --output <file>   Output file path (default: stdout)
+-c, --config <file>   Configuration file for advanced options (JSON format)
 -h, --help           Show help message
+```
+
+### Advanced Configuration
+
+Use `-c` or `--config` to specify a JSON configuration file for advanced options:
+
+```bash
+# Filter nodes and customize output
+subconverter -u subscription.txt -t clash -c config.json -o clash.yaml
+```
+
+**Config file features:**
+- Filter proxies by name patterns (include/exclude)
+- Append proxy type to node names
+- Define custom proxy groups
+- Configure routing rules
+- Set format-specific options
+
+See [CONFIG_GUIDE.md](./CONFIG_GUIDE.md) for complete configuration documentation.
+
+**Example config.json:**
+```json
+{
+  "excludeRemarks": ["到期", "过期"],
+  "appendProxyType": true,
+  "groups": [
+    {
+      "name": "Proxy",
+      "type": "select",
+      "proxies": ["auto", "DIRECT"]
+    }
+  ],
+  "rules": [
+    "DOMAIN-SUFFIX,google.com,Proxy",
+    "GEOIP,CN,DIRECT"
+  ],
+  "clashOptions": {
+    "port": 8080
+  }
+}
 ```
 
 ## Library Usage

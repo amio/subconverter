@@ -1,0 +1,47 @@
+{
+  "excludeRemarks": [
+    "到期",
+    "剩余流量",
+    "过期",
+    "官网"
+  ],
+  "includeRemarks": [],
+  "appendProxyType": false,
+  "groups": [
+    {
+      "name": "Proxy",
+      "type": "select",
+      "proxies": ["auto", "DIRECT"]
+    },
+    {
+      "name": "auto",
+      "type": "url-test",
+      "url": "http://www.gstatic.com/generate_204",
+      "interval": 300
+    }
+  ],
+  "rules": [
+    "DOMAIN-SUFFIX,google.com,Proxy",
+    "DOMAIN-SUFFIX,github.com,Proxy",
+    "DOMAIN-SUFFIX,youtube.com,Proxy",
+    "GEOIP,CN,DIRECT",
+    "MATCH,Proxy"
+  ],
+  "clashOptions": {
+    "port": 7890,
+    "socksPort": 7891,
+    "allowLan": false,
+    "mode": "rule",
+    "logLevel": "info"
+  },
+  "surgeOptions": {
+    "version": 4
+  },
+  "v2rayOptions": {
+    "port": 1080
+  },
+  "singboxOptions": {
+    "port": 2080
+  },
+  "outputJson": false
+}

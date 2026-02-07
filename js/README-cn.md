@@ -72,7 +72,48 @@ subconverter -u ./subscription.txt -t mixed
                       支持：clash、clashr、surge、quanx、v2ray、
                            ss、ssr、trojan、mixed、singbox
 -o, --output <file>   输出文件路径（默认：标准输出）
+-c, --config <file>   高级选项配置文件（JSON 格式）
 -h, --help           显示帮助信息
+```
+
+### 高级配置
+
+使用 `-c` 或 `--config` 指定 JSON 配置文件以实现高级选项：
+
+```bash
+# 过滤节点并自定义输出
+subconverter -u subscription.txt -t clash -c config.json -o clash.yaml
+```
+
+**配置文件功能：**
+- 按名称模式过滤代理（包含/排除）
+- 为节点名称添加代理类型前缀
+- 定义自定义代理组
+- 配置路由规则
+- 设置格式特定选项
+
+完整配置文档请参见 [CONFIG_GUIDE.md](./CONFIG_GUIDE.md)。
+
+**示例 config.json：**
+```json
+{
+  "excludeRemarks": ["到期", "过期"],
+  "appendProxyType": true,
+  "groups": [
+    {
+      "name": "代理",
+      "type": "select",
+      "proxies": ["自动选择", "DIRECT"]
+    }
+  ],
+  "rules": [
+    "DOMAIN-SUFFIX,google.com,代理",
+    "GEOIP,CN,DIRECT"
+  ],
+  "clashOptions": {
+    "port": 8080
+  }
+}
 ```
 
 ## 库使用方法
