@@ -40,6 +40,18 @@ npm install subconverter-js
 
 Or for browser usage, include the script directly.
 
+## Cloudflare Workers
+
+[![Deploy to Cloudflare Workers](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/amio/subconverter-js)
+
+The Worker entrypoint lives in `worker/index.js`. Update `CUSTOM_CONFIG` there to apply your own conversion options before deploying.
+
+Example request after deployment:
+
+```
+https://<your-worker>.workers.dev/?url=https://example.com/subscription&target=clash
+```
+
 ## Command-Line Usage
 
 The library includes a CLI tool for quick conversions:

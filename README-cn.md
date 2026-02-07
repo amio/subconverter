@@ -40,6 +40,18 @@ npm install subconverter-js
 
 或在浏览器中直接引入脚本。
 
+## Cloudflare Workers
+
+[![Deploy to Cloudflare Workers](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/amio/subconverter-js)
+
+Worker 入口位于 `worker/index.js`，可在其中修改 `CUSTOM_CONFIG` 来应用自定义转换配置。
+
+部署后请求示例：
+
+```
+https://<your-worker>.workers.dev/?url=https://example.com/subscription&target=clash
+```
+
 ## 命令行使用
 
 该库包含一个 CLI 工具用于快速转换：
