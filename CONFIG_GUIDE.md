@@ -10,7 +10,9 @@ The CLI supports advanced configuration through JSON config files using the `-c`
   "includeRemarks": ["pattern1", "pattern2"],
   "appendProxyType": false,
   "groups": [...],
+  "extraGroups": [...],
   "rules": [...],
+  "extraRules": [...],
   "clashOptions": {...},
   "surgeOptions": {...},
   "quanxOptions": {...},
@@ -84,6 +86,10 @@ The CLI supports advanced configuration through JSON config files using the `-c`
 - `interval`: Test interval in seconds
 - `tolerance`: Tolerance in milliseconds (for url-test)
 
+#### extraGroups
+- **Type**: Array of group objects
+- **Description**: Additional Clash proxy groups appended after the existing `groups` list (or default groups if `groups` is empty).
+
 ### Rules Configuration
 
 #### rules
@@ -110,6 +116,10 @@ The CLI supports advanced configuration through JSON config files using the `-c`
 - `IP-CIDR`: IP CIDR block
 - `GEOIP`: GeoIP database match
 - `MATCH`: Catch-all rule (should be last)
+
+#### extraRules
+- **Type**: Array of strings
+- **Description**: Additional Clash rules prepended before the existing `rules` list (or default rules if `rules` is empty).
 
 ### Format-Specific Options
 

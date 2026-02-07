@@ -143,6 +143,27 @@ test('subconvert to clash format', () => {
   assert.ok(result.includes('proxy-groups:'));
 });
 
+test('subconvert to clash format with extra groups and rules', () => {
+  const subscription = 'ss://YWVzLTI1Ni1nY206dGVzdA==@192.168.1.1:8388#Test';
+  const result = subconvert(subscription, 'clash', {
+    outputJson: true,
+    extraGroups: [
+      {
+        name: 'Extra',
+        type: 'select',
+        proxies: ['PROXY']
+      }
+    ],
+    extraRules: ['DOMAIN-SUFFIX,example.com,PROXY']
+  });
+  const config = JSON.parse(result);
+  const groupNames = config['proxy-groups'].map(group => group.name);
+  
+  assert.strictEqual(groupNames[groupNames.length - 1], 'Extra');
+  assert.strictEqual(config.rules[0], 'DOMAIN-SUFFIX,example.com,PROXY');
+  assert.strictEqual(config.rules[config.rules.length - 1], 'MATCH,PROXY');
+});
+
 test('subconvert to v2ray format', () => {
   const subscription = 'ss://YWVzLTI1Ni1nY206dGVzdA==@192.168.1.1:8388#Test';
   const result = subconvert(subscription, 'v2ray');

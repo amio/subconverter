@@ -118,10 +118,12 @@ subconverter -u subscription.txt -t clash -c config.json -o clash.yaml
       "proxies": ["自动选择", "DIRECT"]
     }
   ],
+  "extraGroups": [],
   "rules": [
     "DOMAIN-SUFFIX,google.com,代理",
     "GEOIP,CN,DIRECT"
   ],
+  "extraRules": [],
   "clashOptions": {
     "port": 8080
   }

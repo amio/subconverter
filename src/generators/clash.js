@@ -135,7 +135,9 @@ export function generateClash(proxies, options = {}) {
     logLevel = 'info',
     externalController = '127.0.0.1:9090',
     groups = [],
-    rules = []
+    rules = [],
+    extraGroups = [],
+    extraRules = []
   } = options;
   
   // Convert all proxies
@@ -144,7 +146,7 @@ export function generateClash(proxies, options = {}) {
     .filter(proxy => proxy !== null);
   
   // Create default proxy groups if not provided
-  const proxyGroups = groups.length > 0 ? groups : [
+  const baseProxyGroups = groups.length > 0 ? groups : [
     {
       name: 'PROXY',
       type: 'select',
@@ -158,11 +160,17 @@ export function generateClash(proxies, options = {}) {
       interval: 300
     }
   ];
+  const proxyGroups = extraGroups.length > 0
+    ? [...baseProxyGroups, ...extraGroups]
+    : baseProxyGroups;
   
   // Create default rules if not provided
-  const clashRules = rules.length > 0 ? rules : [
+  const baseRules = rules.length > 0 ? rules : [
     'MATCH,PROXY'
   ];
+  const clashRules = extraRules.length > 0
+    ? [...extraRules, ...baseRules]
+    : baseRules;
   
   return {
     port,

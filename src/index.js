@@ -36,7 +36,18 @@ export function subconvert(subscriptionString, target, options = {}) {
   }
   
   // Get format-specific options
-  const formatOptions = options[`${target.toLowerCase()}Options`] || {};
+  const targetLower = target.toLowerCase();
+  const formatOptions = {
+    ...(options[`${targetLower}Options`] || {})
+  };
+  
+  if ((targetLower === 'clash' || targetLower === 'clashr') && Array.isArray(options.extraGroups)) {
+    formatOptions.extraGroups = options.extraGroups;
+  }
+  
+  if ((targetLower === 'clash' || targetLower === 'clashr') && Array.isArray(options.extraRules)) {
+    formatOptions.extraRules = options.extraRules;
+  }
   
   // Generate output
   const result = generate(proxies, target, formatOptions);
@@ -49,7 +60,7 @@ export function subconvert(subscriptionString, target, options = {}) {
   }
   
   // For structured formats (Clash, V2Ray, SingBox), convert to appropriate string format
-  switch (target.toLowerCase()) {
+  switch (targetLower) {
     case 'clash':
     case 'clashr':
       return outputJson ? JSON.stringify(result, null, 2) : yaml.dump(result);
@@ -97,7 +108,18 @@ export function mergeAndConvert(subscriptions, target, options = {}) {
   }
   
   // Generate output
-  const formatOptions = options[`${target.toLowerCase()}Options`] || {};
+  const targetLower = target.toLowerCase();
+  const formatOptions = {
+    ...(options[`${targetLower}Options`] || {})
+  };
+  
+  if ((targetLower === 'clash' || targetLower === 'clashr') && Array.isArray(options.extraGroups)) {
+    formatOptions.extraGroups = options.extraGroups;
+  }
+  
+  if ((targetLower === 'clash' || targetLower === 'clashr') && Array.isArray(options.extraRules)) {
+    formatOptions.extraRules = options.extraRules;
+  }
   const result = generate(allProxies, target, formatOptions);
   
   // Format output
@@ -107,7 +129,7 @@ export function mergeAndConvert(subscriptions, target, options = {}) {
     return result;
   }
   
-  switch (target.toLowerCase()) {
+  switch (targetLower) {
     case 'clash':
     case 'clashr':
       return outputJson ? JSON.stringify(result, null, 2) : yaml.dump(result);

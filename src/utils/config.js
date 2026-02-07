@@ -15,9 +15,11 @@ export const defaultConfig = {
   
   // Proxy group configuration
   groups: [],
+  extraGroups: [],
   
   // Rules configuration
   rules: [],
+  extraRules: [],
   
   // Format-specific options
   clashOptions: {},
@@ -115,9 +117,17 @@ export function getFormatOptions(config, target) {
     options.groups = config.groups;
   }
   
+  if ((targetLower === 'clash' || targetLower === 'clashr') && config.extraGroups && config.extraGroups.length > 0) {
+    options.extraGroups = config.extraGroups;
+  }
+  
   // Add rules if configured
   if (config.rules && config.rules.length > 0) {
     options.rules = config.rules;
+  }
+  
+  if ((targetLower === 'clash' || targetLower === 'clashr') && config.extraRules && config.extraRules.length > 0) {
+    options.extraRules = config.extraRules;
   }
   
   return options;

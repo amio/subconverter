@@ -20,6 +20,7 @@
       "interval": 300
     }
   ],
+  "extraGroups": [],
   "rules": [
     "DOMAIN-SUFFIX,google.com,Proxy",
     "DOMAIN-SUFFIX,github.com,Proxy",
@@ -27,6 +28,7 @@
     "GEOIP,CN,DIRECT",
     "MATCH,Proxy"
   ],
+  "extraRules": [],
   "clashOptions": {
     "port": 7890,
     "socksPort": 7891,

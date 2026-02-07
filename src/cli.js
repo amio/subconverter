@@ -90,7 +90,9 @@ Config file format (JSON):
     "includeRemarks": ["regex_pattern"],
     "appendProxyType": false,
     "groups": [...],
+    "extraGroups": [...],
     "rules": [...],
+    "extraRules": [...],
     "clashOptions": { "port": 7890, ... },
     "surgeOptions": { ... }
   }

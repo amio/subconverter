@@ -117,6 +117,8 @@ export interface ConversionOptions {
   surgeOptions?: SurgeOptions;
   v2rayOptions?: V2RayOptions;
   singboxOptions?: SingBoxOptions;
+  extraGroups?: ClashProxyGroup[];
+  extraRules?: string[];
   outputJson?: boolean;
 }
 

@@ -118,10 +118,12 @@ See [CONFIG_GUIDE.md](./CONFIG_GUIDE.md) for complete configuration documentatio
       "proxies": ["auto", "DIRECT"]
     }
   ],
+  "extraGroups": [],
   "rules": [
     "DOMAIN-SUFFIX,google.com,Proxy",
     "GEOIP,CN,DIRECT"
   ],
+  "extraRules": [],
   "clashOptions": {
     "port": 8080
   }
