@@ -1,6 +1,6 @@
-# Subconverter JavaScript 库
+# subconverter-js
 
-Subconverter 的 JavaScript 实现 - 在各种代理订阅格式之间进行转换。
+[subconverter](https://github.com/tindy2013/subconverter) 的 JavaScript 实现（含 CLI 和 Worker） - 在各种代理订阅格式之间进行转换。
 
 ## 特性
 

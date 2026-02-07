@@ -1,6 +1,6 @@
-# Subconverter JavaScript Library
+# subconverter-js
 
-JavaScript implementation of subconverter - converts between various proxy subscription formats.
+JavaScript port of [subconverter](https://github.com/tindy2013/subconverter) with cli and worker - converts between various proxy subscription formats.
 
 ## Features
 
