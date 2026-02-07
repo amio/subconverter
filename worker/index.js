@@ -6,6 +6,7 @@ const JSON_TARGETS = new Set(['v2ray', 'singbox']);
 const CUSTOM_CONFIG = {
   clashOptions: {
     logLevel: 'info',
+    allowLan: true,
     groups: [
       {
         name: 'AI Services',
