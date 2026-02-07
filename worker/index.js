@@ -5,10 +5,31 @@ const JSON_TARGETS = new Set(['v2ray', 'singbox']);
 
 const CUSTOM_CONFIG = {
   clashOptions: {
-    port: 7890,
-    allowLan: true,
-    mode: 'rule',
-    logLevel: 'info'
+    logLevel: 'info',
+    groups: [
+      {
+        name: 'AI Services',
+        type: 'url-test',
+        url: 'http://www.gstatic.com/generate_204',
+        interval: 300,
+        'include-all': true,
+        filter: "(?i)美国|US|LA",
+      }
+    ],
+    rules: [
+      'DOMAIN-KEYWORD,gemini,AI Services',
+      'DOMAIN-KEYWORD,youtube,AI Services',
+      'DOMAIN-KEYWORD,google,AI Services',
+      'DOMAIN-KEYWORD,chatgpt,AI Services',
+      'DOMAIN-KEYWORD,livekit,AI Services',
+      'DOMAIN-KEYWORD,openai,AI Services',
+      'DOMAIN-KEYWORD,claude,AI Services',
+      'DOMAIN-KEYWORD,anthropic,AI Services',
+      'DOMAIN-KEYWORD,openrouter,AI Services',
+      'DOMAIN-SUFFIX,chat.com,AI Services',
+      'DOMAIN-SUFFIX,sora.com,AI Services',
+      'DOMAIN-SUFFIX,chat.com,AI Services'
+    ]
   },
   outputJson: false
 };
