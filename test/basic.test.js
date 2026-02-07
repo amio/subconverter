@@ -11,7 +11,7 @@ import { parseVMess } from '../src/parsers/vmess.js';
 import { parseTrojan } from '../src/parsers/trojan.js';
 
 const targetSsLink = 'ss://YWVzLTI1Ni1nY206dGVzdA==@10.0.0.1:8388#TargetSS';
-const targetSsrLink = 'ssr://MTkyLjE2OC4xLjE6ODM4ODphdXRoX2FlczEyOF9tZDU6YWVzLTI1Ni1jZmI6dGxzMS4yX3RpY2tldF9hdXRoOmRHVnpkQS8_cmVtYXJrcz1WR1Z6ZEE';
+const targetSsrLink = 'ssr://MTkyLjE2OC4xLjE6ODM4ODphdXRoX2FlczEyOF9tZDU6YWVzLTI1Ni1jZmI6dGxzMS4yX3RpY2tldF9hdXRoOmRHVnpkQS8_cmVtYXJrcz1WR0Z5WjJWMFUxTlM';
 const targetVmessConfig = {
   v: '2',
   ps: 'TargetVMess',
@@ -52,7 +52,7 @@ test('parseShadowsocksR', () => {
   assert.strictEqual(proxy.type, 'ssr');
   assert.strictEqual(proxy.server, '192.168.1.1');
   assert.strictEqual(proxy.port, 8388);
-  assert.strictEqual(proxy.name, 'Test');
+  assert.strictEqual(proxy.name, 'TargetSSR');
 });
 
 test('parseVMess', () => {
@@ -201,7 +201,7 @@ test('subconvert to ssr format', () => {
   const result = subconvert(targetSubscription, 'ssr');
   const proxy = parseShadowsocksR(result.trim());
   
-  assert.strictEqual(proxy.name, 'Test');
+  assert.strictEqual(proxy.name, 'TargetSSR');
   assert.strictEqual(proxy.protocol, 'auth_aes128_md5');
 });
 
