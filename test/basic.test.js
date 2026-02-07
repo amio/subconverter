@@ -4,7 +4,7 @@
 
 import { test } from 'node:test';
 import assert from 'node:assert';
-import { parse, subconvert } from '../src/index.js';
+import { mergeAndConvert, parse, parseMixedSubscription, subconvert } from '../src/index.js';
 import { parseShadowsocks } from '../src/parsers/shadowsocks.js';
 import { parseShadowsocksR } from '../src/parsers/shadowsocksr.js';
 import { parseVMess } from '../src/parsers/vmess.js';
@@ -81,6 +81,29 @@ trojan://password@192.168.1.2:443#Test2`;
   assert.strictEqual(proxies[1].type, 'trojan');
 });
 
+test('parse base64 subscription with comments', () => {
+  const rawSubscription = `# comment
+ss://YWVzLTI1Ni1nY206dGVzdA==@192.168.1.1:8388#Test1
+
+trojan://password@192.168.1.2:443#Test2`;
+  const encoded = Buffer.from(rawSubscription, 'utf-8').toString('base64');
+  const proxies = parse(encoded);
+  
+  assert.strictEqual(proxies.length, 2);
+  assert.strictEqual(proxies[0].name, 'Test1');
+  assert.strictEqual(proxies[1].name, 'Test2');
+});
+
+test('parse mixed subscription with base64 segments', () => {
+  const first = 'ss://YWVzLTI1Ni1nY206dGVzdA==@192.168.1.1:8388#Mixed1';
+  const second = Buffer.from('trojan://password@192.168.1.2:443#Mixed2', 'utf-8').toString('base64');
+  const proxies = parseMixedSubscription(`${first}|${second}`);
+  
+  assert.strictEqual(proxies.length, 2);
+  assert.strictEqual(proxies[0].type, 'ss');
+  assert.strictEqual(proxies[1].type, 'trojan');
+});
+
 test('subconvert to mixed format', () => {
   const subscription = 'ss://YWVzLTI1Ni1nY206dGVzdA==@192.168.1.1:8388#Test';
   const result = subconvert(subscription, 'mixed');
@@ -119,4 +142,15 @@ test('subconvert with invalid target throws error', () => {
   assert.throws(() => {
     subconvert(subscription, 'invalid');
   }, /Unsupported target format/);
+});
+
+test('mergeAndConvert returns json with combined proxies', () => {
+  const sub1 = 'ss://YWVzLTI1Ni1nY206dGVzdA==@192.168.1.1:8388#Merge1';
+  const sub2 = 'ss://YWVzLTI1Ni1nY206dGVzdA==@192.168.1.2:8389#Merge2';
+  const result = mergeAndConvert([sub1, sub2], 'clash', { outputJson: true });
+  const config = JSON.parse(result);
+  
+  assert.strictEqual(config.proxies.length, 2);
+  assert.ok(config.proxies.some(proxy => proxy.name === 'Merge1'));
+  assert.ok(config.proxies.some(proxy => proxy.name === 'Merge2'));
 });
