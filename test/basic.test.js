@@ -10,6 +10,30 @@ import { parseShadowsocksR } from '../src/parsers/shadowsocksr.js';
 import { parseVMess } from '../src/parsers/vmess.js';
 import { parseTrojan } from '../src/parsers/trojan.js';
 
+const targetSsLink = 'ss://YWVzLTI1Ni1nY206dGVzdA==@10.0.0.1:8388#TargetSS';
+const targetSsrLink = 'ssr://MTkyLjE2OC4xLjE6ODM4ODphdXRoX2FlczEyOF9tZDU6YWVzLTI1Ni1jZmI6dGxzMS4yX3RpY2tldF9hdXRoOmRHVnpkQS8_cmVtYXJrcz1WR1Z6ZEE';
+const targetVmessConfig = {
+  v: '2',
+  ps: 'TargetVMess',
+  add: '10.0.0.3',
+  port: '8443',
+  id: 'b8be1234-5678-90ab-cdef-1234567890ab',
+  aid: '0',
+  net: 'ws',
+  type: 'none',
+  host: 'vmess.example.com',
+  path: '/ws',
+  tls: 'tls'
+};
+const targetVmessLink = `vmess://${Buffer.from(JSON.stringify(targetVmessConfig)).toString('base64')}`;
+const targetTrojanLink = 'trojan://password123@10.0.0.4:443?sni=example.com#TargetTrojan';
+const targetSubscription = [
+  targetSsLink,
+  targetSsrLink,
+  targetVmessLink,
+  targetTrojanLink
+].join('\n');
+
 test('parseShadowsocks - SIP002 format', () => {
   const link = 'ss://YWVzLTI1Ni1nY206dGVzdA==@192.168.1.1:8388#Test';
   const proxy = parseShadowsocks(link);
@@ -23,8 +47,7 @@ test('parseShadowsocks - SIP002 format', () => {
 });
 
 test('parseShadowsocksR', () => {
-  const link = 'ssr://MTkyLjE2OC4xLjE6ODM4ODphdXRoX2FlczEyOF9tZDU6YWVzLTI1Ni1jZmI6dGxzMS4yX3RpY2tldF9hdXRoOmRHVnpkQS8_cmVtYXJrcz1WR1Z6ZEE';
-  const proxy = parseShadowsocksR(link);
+  const proxy = parseShadowsocksR(targetSsrLink);
   
   assert.strictEqual(proxy.type, 'ssr');
   assert.strictEqual(proxy.server, '192.168.1.1');
@@ -128,6 +151,74 @@ test('subconvert to v2ray format', () => {
   assert.ok(config.inbounds);
   assert.ok(config.outbounds);
   assert.ok(config.routing);
+});
+
+test('subconvert to clashr format', () => {
+  const result = subconvert(targetSubscription, 'clashr', { outputJson: true });
+  const config = JSON.parse(result);
+  
+  assert.strictEqual(config.proxies.length, 4);
+  assert.ok(config['proxy-groups'].some(group => group.proxies.includes('TargetSS')));
+});
+
+test('subconvert to surge format', () => {
+  const result = subconvert(targetSubscription, 'surge');
+  
+  assert.ok(result.includes('[Proxy]'));
+  assert.ok(result.includes('TargetSS = ss,'));
+  assert.ok(result.includes('TargetVMess = custom,'));
+  assert.ok(result.includes('TargetTrojan = trojan,'));
+});
+
+test('subconvert to quanx format', () => {
+  const result = subconvert(targetSubscription, 'quanx');
+  
+  assert.ok(result.includes('[server_local]'));
+  assert.ok(result.includes('tag=TargetSS'));
+  assert.ok(result.includes('tag=TargetVMess'));
+  assert.ok(result.includes('tag=TargetTrojan'));
+});
+
+test('subconvert to singbox format', () => {
+  const result = subconvert(targetSubscription, 'singbox');
+  const config = JSON.parse(result);
+  const tags = config.outbounds.map(outbound => outbound.tag);
+  
+  assert.ok(tags.includes('TargetSS'));
+  assert.ok(tags.includes('TargetVMess'));
+  assert.ok(tags.includes('TargetTrojan'));
+});
+
+test('subconvert to ss format', () => {
+  const result = subconvert(targetSubscription, 'ss');
+  const proxy = parseShadowsocks(result.trim());
+  
+  assert.strictEqual(proxy.name, 'TargetSS');
+  assert.strictEqual(proxy.server, '10.0.0.1');
+});
+
+test('subconvert to ssr format', () => {
+  const result = subconvert(targetSubscription, 'ssr');
+  const proxy = parseShadowsocksR(result.trim());
+  
+  assert.strictEqual(proxy.name, 'Test');
+  assert.strictEqual(proxy.protocol, 'auth_aes128_md5');
+});
+
+test('subconvert to vmess format', () => {
+  const result = subconvert(targetSubscription, 'vmess');
+  const proxy = parseVMess(result.trim());
+  
+  assert.strictEqual(proxy.name, 'TargetVMess');
+  assert.strictEqual(proxy.network, 'ws');
+});
+
+test('subconvert to trojan format', () => {
+  const result = subconvert(targetSubscription, 'trojan');
+  const proxy = parseTrojan(result.trim());
+  
+  assert.strictEqual(proxy.name, 'TargetTrojan');
+  assert.strictEqual(proxy.sni, 'example.com');
 });
 
 test('subconvert with invalid input throws error', () => {
