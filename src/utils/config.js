@@ -4,6 +4,7 @@
  */
 
 import fs from 'fs';
+import path from 'path';
 import yaml from 'js-yaml';
 
 /**
@@ -43,11 +44,12 @@ export function loadConfig(configPath) {
   }
   
   try {
+    const displayPath = path.basename(configPath);
     let content;
     try {
       content = fs.readFileSync(configPath, 'utf-8');
     } catch (error) {
-      throw new Error(`Failed to read config file: ${error.message}`);
+      throw new Error(`Failed to read config file: ${displayPath} - ${error.message}`);
     }
     const lowerPath = configPath.toLowerCase();
     const isYaml = lowerPath.endsWith('.yml') || lowerPath.endsWith('.yaml');
@@ -55,7 +57,7 @@ export function loadConfig(configPath) {
     try {
       rawConfig = isYaml ? yaml.load(content) : JSON.parse(content);
     } catch (error) {
-      throw new Error(`Failed to parse ${isYaml ? 'YAML' : 'JSON'} config: ${configPath} - ${error.message}`);
+      throw new Error(`Failed to parse ${isYaml ? 'YAML' : 'JSON'} config: ${displayPath} - ${error.message}`);
     }
     if (rawConfig === null || typeof rawConfig !== 'object' || Array.isArray(rawConfig)) {
       let receivedType;

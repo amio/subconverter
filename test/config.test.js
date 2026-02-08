@@ -66,7 +66,7 @@ test('loadConfig throws on invalid YAML', () => {
 
   try {
     fs.writeFileSync(configPath, yamlContent, 'utf-8');
-    assert.throws(() => loadConfig(configPath), /Failed to load config file/);
+    assert.throws(() => loadConfig(configPath), /Failed to parse YAML config/);
   } finally {
     fs.rmSync(tempDir, { recursive: true, force: true });
   }
