@@ -32,3 +32,37 @@ test('loadConfig supports YAML files', () => {
     fs.rmSync(tempDir, { recursive: true, force: true });
   }
 });
+
+test('loadConfig supports JSON files', () => {
+  const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'subconverter-config-'));
+  const configPath = path.join(tempDir, 'pref.json');
+  const jsonContent = JSON.stringify({
+    includeRemarks: ['香港'],
+    appendProxyType: false,
+    surgeOptions: { version: 4 }
+  }, null, 2);
+
+  try {
+    fs.writeFileSync(configPath, jsonContent, 'utf-8');
+    const config = loadConfig(configPath);
+
+    assert.deepStrictEqual(config.includeRemarks, ['香港']);
+    assert.strictEqual(config.appendProxyType, false);
+    assert.strictEqual(config.surgeOptions.version, 4);
+  } finally {
+    fs.rmSync(tempDir, { recursive: true, force: true });
+  }
+});
+
+test('loadConfig throws on invalid YAML', () => {
+  const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'subconverter-config-'));
+  const configPath = path.join(tempDir, 'pref.yml');
+  const yamlContent = 'clashOptions: [\n';
+
+  try {
+    fs.writeFileSync(configPath, yamlContent, 'utf-8');
+    assert.throws(() => loadConfig(configPath), /Failed to load config file/);
+  } finally {
+    fs.rmSync(tempDir, { recursive: true, force: true });
+  }
+});

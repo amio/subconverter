@@ -47,7 +47,9 @@ export function loadConfig(configPath) {
     const lowerPath = configPath.toLowerCase();
     const isYaml = lowerPath.endsWith('.yml') || lowerPath.endsWith('.yaml');
     const rawConfig = isYaml ? yaml.load(content) : JSON.parse(content);
-    const config = rawConfig && typeof rawConfig === 'object' ? rawConfig : {};
+    const config = rawConfig && typeof rawConfig === 'object' && !Array.isArray(rawConfig)
+      ? rawConfig
+      : {};
     
     // Merge with defaults
     return {
